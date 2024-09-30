@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glosguru-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: glosguru-ui
+  template:
+    metadata:
+      labels:
+        app: glosguru-ui
+    spec:
+      containers:
+      - image: ghcr.io/loxymartin/glosguru/glosguru:latest
+        name: glosguru-ui
+        ports:
+        - containerPort: 80
