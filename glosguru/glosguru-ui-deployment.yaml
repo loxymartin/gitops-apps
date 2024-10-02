@@ -14,7 +14,7 @@ spec:
         app: glosguru-ui
     spec:
       containers:
-      - image: ghcr.io/loxymartin/glosguru/glosguru:latest
+      - image: ghcr.io/loxymartin/glosguru/glosguru:13
         name: glosguru-ui
         ports:
         - containerPort: 80
