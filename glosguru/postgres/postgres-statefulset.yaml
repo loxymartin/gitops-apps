@@ -14,41 +14,41 @@ spec:
         app: postgres
     spec:
       containers:
-      - name: postgres
-        image: postgres:13
-        ports:
-        - containerPort: 5432
-        env:
-        - name: POSTGRES_DB
-          value: "glosguru"
-        - name: POSTGRES_USER
-          value: "glosguru"
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: password
-        volumeMounts:
-        - name: postgres-storage
-          mountPath: /var/lib/postgresql/data
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-            - "/bin/sh"
-            - "-c"
-            - "psql -U glosguru -d glosguru -c 'SELECT 1'"
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: postgres
+          image: postgres:18
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "glosguru"
+            - name: POSTGRES_USER
+              value: "glosguru"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "psql -U glosguru -d glosguru -c 'SELECT 1'"
+            initialDelaySeconds: 5
+            periodSeconds: 10
   volumeClaimTemplates:
-  - metadata:
-      name: postgres-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
