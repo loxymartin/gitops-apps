@@ -6,11 +6,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/loxymartin/gitops-apps.git'
+    repoURL: "https://github.com/loxymartin/gitops-apps.git"
     targetRevision: HEAD
-    path: postgres
+    path: glosguru/postgres
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: "https://kubernetes.default.svc"
     namespace: default
   syncPolicy:
     automated:
