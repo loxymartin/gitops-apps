@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mts-api
+  namespace: mts
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: mts-api
+  template:
+    metadata:
+      labels:
+        app: mts-api
+    spec:
+      containers:
+        - name: mts-api
+          image: ghcr.io/loxymartin/mts-api:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__MTSDatabase
+              valueFrom:
+                secretKeyRef:
+                  name: mts-secret
+                  key: connection-string
+            - name: Jwt__Key
+              valueFrom:
+                secretKeyRef:
+                  name: mts-secret
+                  key: jwt-key
+            - name: Jwt__Issuer
+              value: "MTS.Api"
+            - name: Jwt__Audience
+              value: "MTS.Admin"
+            - name: Jwt__WorkerAudience
+              value: "MTS.Worker"
+            - name: Jwt__ExtensionAudience
+              value: "MTS.Extension"
+            - name: Cors__AllowedOrigins__0
+              value: "https://mts.pucko.local"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

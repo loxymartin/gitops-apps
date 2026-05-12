@@ -1,18 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: postgres
+  name: mts
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: "https://github.com/loxymartin/gitops-apps.git"
     targetRevision: HEAD
-    path: glosguru/postgres
+    path: mts
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: default
+    namespace: mts
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

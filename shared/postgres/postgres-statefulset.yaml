@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
+  namespace: shared
 spec:
   serviceName: "postgres"
   replicas: 1
@@ -20,9 +21,9 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: "glosguru"
+              value: "postgres"
             - name: POSTGRES_USER
-              value: "glosguru"
+              value: "postgres"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -41,7 +42,7 @@ spec:
               command:
                 - "/bin/sh"
                 - "-c"
-                - "psql -U glosguru -d glosguru -c 'SELECT 1'"
+                - "psql -U postgres -c 'SELECT 1'"
             initialDelaySeconds: 5
             periodSeconds: 10
   volumeClaimTemplates:
@@ -49,6 +50,7 @@ spec:
         name: postgres-storage
       spec:
         accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
         resources:
           requests:
             storage: 1Gi

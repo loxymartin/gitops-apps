@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mts-worker
+  namespace: mts
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: mts-worker
+  template:
+    metadata:
+      labels:
+        app: mts-worker
+    spec:
+      containers:
+        - name: mts-worker
+          image: ghcr.io/loxymartin/mts-worker:latest
+          ports:
+            - containerPort: 5081
+          env:
+            - name: MTSApiAddress
+              value: "http://mts-api.mts.svc.cluster.local:8080"
+            - name: M2MClient__ClientId
+              value: "mts.worker"
+            - name: M2MClient__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: mts-secret
+                  key: worker-client-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 5081
+            initialDelaySeconds: 10
+            periodSeconds: 10

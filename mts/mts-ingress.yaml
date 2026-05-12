@@ -1,0 +1,21 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mts-ingress
+  namespace: mts
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`mts.pucko.local`) && PathPrefix(`/api`)
+      services:
+        - name: mts-api
+          namespace: mts
+          port: 8080
+    - kind: Rule
+      match: Host(`mts.pucko.local`)
+      services:
+        - name: mts-admin
+          namespace: mts
+          port: 80

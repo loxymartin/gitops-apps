@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-32b8b8f4-9b23-4169-94b7-154fb32d0dde
+  annotations:
+    pv.kubernetes.io/provisioned-by: rancher.io/local-path
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  volumeMode: Filesystem
+  local:
+    path: /var/lib/rancher/k3s/storage/pvc-32b8b8f4-9b23-4169-94b7-154fb32d0dde_default_postgres-storage-postgres-0
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - rpi5
+  claimRef:
+    name: postgres-storage-postgres-0
+    namespace: shared
