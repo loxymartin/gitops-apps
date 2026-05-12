@@ -21,9 +21,9 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_DB
-              value: "postgres"
+              value: "glosguru"
             - name: POSTGRES_USER
-              value: "postgres"
+              value: "glosguru"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -42,7 +42,7 @@ spec:
               command:
                 - "/bin/sh"
                 - "-c"
-                - "psql -U postgres -c 'SELECT 1'"
+                - "psql -U glosguru -d glosguru -c 'SELECT 1'"
             initialDelaySeconds: 5
             periodSeconds: 10
   volumeClaimTemplates:
